@@ -4,7 +4,7 @@ package com.safetynet.alerts.interfaces;
  * DataLoaderService read the data.json file
  */
 public interface IDataLoaderService {
-    public void loadInputJsonFile();
+    void loadInputJsonFile();
 
 }
 

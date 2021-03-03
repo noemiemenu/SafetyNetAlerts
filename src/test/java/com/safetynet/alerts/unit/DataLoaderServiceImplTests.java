@@ -2,7 +2,9 @@ package com.safetynet.alerts.unit;
 
 import com.safetynet.alerts.interfaces.IDataLoaderService;
 import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.repositories.PersonRepository;
+import com.safetynet.alerts.repositories.FirestationsRepository;
+import com.safetynet.alerts.repositories.MedicalRecordsRepository;
+import com.safetynet.alerts.repositories.PersonsRepository;
 import com.safetynet.alerts.service.DataLoaderServiceImpl;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +26,14 @@ import static org.mockito.Mockito.*;
 public class DataLoaderServiceImplTests {
 
     @Mock
-    private PersonRepository personRepository;
+    private PersonsRepository personsRepository;
+
+    @Mock
+    private FirestationsRepository firestationsRepository;
+
+    @Mock
+    private MedicalRecordsRepository medicalRecordsRepository;
+
 
 
     private IDataLoaderService dataLoaderService;
@@ -32,7 +41,8 @@ public class DataLoaderServiceImplTests {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        dataLoaderService = PowerMockito.spy(new DataLoaderServiceImpl(personRepository));
+        dataLoaderService = PowerMockito.spy(new DataLoaderServiceImpl(personsRepository, firestationsRepository, medicalRecordsRepository ));
+
     }
 
     @Test
@@ -48,7 +58,7 @@ public class DataLoaderServiceImplTests {
     @Test
     public void testLoadDataJsonFileOnStartup_Assert_That_PersonRepository_Save_Method_Is_Called() {
         assertDoesNotThrow(() -> dataLoaderService.loadDataJsonFileOnStartup(null));
-        verify(personRepository, atLeastOnce()).save(any(Person.class));
+        verify(personsRepository, atLeastOnce()).save(any(Person.class));
     }
 
 }

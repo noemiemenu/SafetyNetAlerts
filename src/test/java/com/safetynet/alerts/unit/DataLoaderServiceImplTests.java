@@ -1,6 +1,8 @@
 package com.safetynet.alerts.unit;
 
 import com.safetynet.alerts.interfaces.IDataLoaderService;
+import com.safetynet.alerts.model.Firestation;
+import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repositories.FirestationsRepository;
 import com.safetynet.alerts.repositories.MedicalRecordsRepository;
@@ -59,6 +61,8 @@ public class DataLoaderServiceImplTests {
     public void testLoadDataJsonFileOnStartup_Assert_That_PersonRepository_Save_Method_Is_Called() {
         assertDoesNotThrow(() -> dataLoaderService.loadDataJsonFileOnStartup(null));
         verify(personsRepository, atLeastOnce()).save(any(Person.class));
+        verify(firestationsRepository, atLeastOnce()).save(any(Firestation.class));
+        verify(medicalRecordsRepository, atLeastOnce()).save(any(MedicalRecord.class));
     }
 
 }

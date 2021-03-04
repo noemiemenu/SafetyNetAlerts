@@ -34,7 +34,7 @@ public class MedicalRecord {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "medicalrecords{" +
                 "firstName='" + firstName + '\'' +
                 "lastName='" + lastName + '\'' +
                 "birthdate='" + birthdate + '\'' +

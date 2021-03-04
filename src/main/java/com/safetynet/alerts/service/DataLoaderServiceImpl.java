@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+
 @Component
 @AllArgsConstructor
 public class DataLoaderServiceImpl implements IDataLoaderService {
@@ -33,6 +34,12 @@ public class DataLoaderServiceImpl implements IDataLoaderService {
     private final MedicalRecordsRepository medicalRecordsRepository;
 
 
+    /**
+     *
+     * @param event
+     * @throws IOException
+     * @throws ParseException
+     */
     @EventListener
     public void loadDataJsonFileOnStartup(ApplicationReadyEvent event) throws IOException, ParseException {
         JSONObject jsonObject = readJsonFile();

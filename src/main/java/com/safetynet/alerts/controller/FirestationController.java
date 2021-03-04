@@ -1,5 +1,6 @@
 package com.safetynet.alerts.controller;
 
+import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.Person;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,14 +14,14 @@ import java.util.List;
 @RestController
 public class FirestationController {
 
-    // Applications de la table Application
-    @ApiOperation(value = "retourner une liste des personnes couvertes par la caserne de pompiers correspondante ")
-    @GetMapping(value = "firestation")
-    public List<Person> listePlanAction() {
-        Person person = new Person();
-        ArrayList<Person> listPerson = new ArrayList();
-        listPerson.add(person);
-        return listPerson;
+
+    @ApiOperation(value = "retourner la liste des caserne de pompiers ")
+    @GetMapping(value = "firestations")
+    public List<Firestation> firestationList() {
+        Firestation firestation = new Firestation();
+        ArrayList<Firestation> firestationArrayList = new ArrayList();
+        firestationArrayList.add(firestation);
+        return firestationArrayList;
     }
 
 

@@ -1,6 +1,7 @@
 package com.safetynet.alerts.service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.safetynet.alerts.interfaces.IDataLoaderService;
 import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.MedicalRecord;
@@ -43,7 +44,7 @@ public class DataLoaderServiceImpl implements IDataLoaderService {
     @EventListener
     public void loadDataJsonFileOnStartup(ApplicationReadyEvent event) throws IOException, ParseException {
         JSONObject jsonObject = readJsonFile();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
         JSONArray persons = (JSONArray) jsonObject.get("persons");
         for (Object personObj : persons) {

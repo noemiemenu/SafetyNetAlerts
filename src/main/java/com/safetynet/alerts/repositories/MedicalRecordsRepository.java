@@ -5,4 +5,5 @@ import com.safetynet.alerts.model.MedicalRecord;
 import org.springframework.data.repository.CrudRepository;
 
 public interface MedicalRecordsRepository extends CrudRepository<MedicalRecord, Integer> {
+    MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName);
 }

@@ -1,14 +1,11 @@
 package com.safetynet.alerts.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -16,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name="medical_records")
 public class MedicalRecord {
 
     @Id
@@ -23,7 +21,7 @@ public class MedicalRecord {
     private int id;
     private String firstName;
     private String lastName;
-    private String birthdate;
+    private Date birthdate;
 
     @ElementCollection
     private List<String> medications;

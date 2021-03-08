@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class MedicalRecordControllerTests {
 
-    private static final String json = "{\n" +
+    private static final String jsonPost = "{\n" +
             "\t\"firstName\": \"Noémie\",\n" +
             "      \"lastName\": \"Menu\",\n" +
             "      \"birthdate\": \"30/07/1996\",\n" +
@@ -31,6 +31,15 @@ public class MedicalRecordControllerTests {
             "        \"nillacilan\"\n" +
             "      ]\n" +
             "}";
+    private static final String jsonPut = "{\n" +
+            "  \"id\": 60,\n" +
+            "  \"firstName\": \"Noémie\",\n" +
+            "  \"lastName\": \"Menu\",\n" +
+            "  \"medications\": [\n" +
+            "    \"Dolliprane\"\n" +
+            "  ]\n" +
+            "\n" +
+            "}";
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +49,7 @@ public class MedicalRecordControllerTests {
         final ResultActions result =
                 mockMvc.perform(
                         post("/medicalRecord")
-                                .content(json)
+                                .content(jsonPost)
                                 .contentType(MediaType.APPLICATION_JSON));
         result
                 .andExpect(status().isCreated())
@@ -52,15 +61,49 @@ public class MedicalRecordControllerTests {
     public void testAddMedicalRecord_ShouldReturn400_OnMedicalRecordAlreadyCreated() throws Exception {
         mockMvc.perform(
                 post("/medicalRecord")
-                        .content(json)
+                        .content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON));
 
         final ResultActions result =
                 mockMvc.perform(
                         post("/medicalRecord")
-                                .content(json)
+                                .content(jsonPost)
                                 .contentType(MediaType.APPLICATION_JSON));
 
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateMedicalRecord() throws Exception {
+        mockMvc.perform(
+                post("/medicalRecord")
+                        .content(jsonPost)
+                        .contentType(MediaType.APPLICATION_JSON));
+        final ResultActions result = mockMvc.perform(
+                put("/medicalRecord")
+                        .content(jsonPut)
+                        .contentType(MediaType.APPLICATION_JSON));
+        result.andExpect(status().isOk()).andExpect(content()
+                .contentType(MediaType.APPLICATION_JSON));
+
+    }
+
+    @Test
+    public void testDeleteMedicalRecord() throws Exception {
+        mockMvc.perform(
+                post("/medicalRecord")
+                        .content(jsonPost)
+                        .contentType(MediaType.APPLICATION_JSON));
+        final ResultActions result = mockMvc.perform(
+                delete("/medicalRecord?firstName=Noémie&lastName=Menu"));
+        result.andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testDeleteMedicalRecord_ShouldReturn400_OnMedicalRecordAlreadyDeleted() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                delete("/medicalRecord?firstName=Noémie&lastName=Menu"));
         result.andExpect(status().isBadRequest());
     }
 }

@@ -12,4 +12,8 @@ public interface FirestationsRepository extends CrudRepository<Firestation, Inte
 
     @Query("select firestation.address from Firestation firestation where firestation.station = :station")
     List<String> getFirestationsByStation(String station);
+
+    Firestation getFirestationsByStationAndAddress(String station, String address);
+
+    Firestation getFirestationByAddress(String address);
 }

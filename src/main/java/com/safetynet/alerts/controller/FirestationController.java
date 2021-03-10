@@ -20,7 +20,6 @@ import java.util.List;
 @Api("Gestion des Firestation ")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/firestation")
 public class FirestationController {
 
     private final FirestationsRepository firestationsRepository;
@@ -28,7 +27,7 @@ public class FirestationController {
     private final MedicalRecordsRepository medicalRecordsRepository;
 
     @ApiOperation(value = "Retourner une liste des personnes couvertes par la caserne de pompiers est fournir un décompte du nombre d'adultes et du nombre d'enfants")
-    @GetMapping()
+    @GetMapping("/firestations")
     public PersonsInFirestationNumberResponse getPersonsFromFirestationNumber(@RequestParam String stationNumber) {
         List<String> addresses = firestationsRepository.getFirestationsByStation(stationNumber);
         List<Person> people = personsRepository.getPeopleByAddresses(new HashSet<>(addresses));
@@ -56,7 +55,7 @@ public class FirestationController {
     }
 
     @ApiOperation(value ="Ajout d'une nouvelle firestation")
-    @PostMapping()
+    @PostMapping("/firestation")
     public ResponseEntity addFirestations(@RequestBody Firestation firestation){
         Firestation firestationFromDataBase = firestationsRepository.getFirestationsByStationAndAddress(firestation.getStation(),
                 firestation.getAddress());
@@ -68,13 +67,13 @@ public class FirestationController {
     }
 
     @ApiOperation(value = "Mettre à jour une firestation")
-    @PutMapping()
-    public Firestation updateFirestation (@RequestBody Firestation firestation) {
+    @PutMapping("/firestation")
+    public Firestation updateFirestation(@RequestBody Firestation firestation) {
         return firestationsRepository.save(firestation);
     }
 
     @ApiOperation(value = "Supprime une firestation")
-    @DeleteMapping()
+    @DeleteMapping("/firestation")
     public ResponseEntity deleteFirestation(@RequestParam String station, @RequestParam String address) {
         Firestation firestation = firestationsRepository.getFirestationsByStationAndAddress(station, address);
 

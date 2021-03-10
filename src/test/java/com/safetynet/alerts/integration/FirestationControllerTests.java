@@ -1,13 +1,19 @@
 package com.safetynet.alerts.integration;
 
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -17,38 +23,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class MedicalRecordControllerTests {
+public class FirestationControllerTests {
 
     private static final String jsonPost = "{\n" +
-            "\t\"firstName\": \"Noémie\",\n" +
-            "      \"lastName\": \"Menu\",\n" +
-            "      \"birthdate\": \"30/07/1996\",\n" +
-            "      \"medications\": [\n" +
-            "        \"aznol:350mg\",\n" +
-            "        \"hydrapermazol:100mg\"\n" +
-            "      ],\n" +
-            "      \"allergies\": [\n" +
-            "        \"nillacilan\"\n" +
-            "      ]\n" +
-            "}";
-    private static final String jsonPut = "{\n" +
+            "      \"address\": \"29 14th St\",\n" +
+            "      \"station\": \"2\"\n" +
+            "    }";
+
+    private static final String jsonPut ="{\n" +
             "  \"id\": 60,\n" +
-            "  \"firstName\": \"Noémie\",\n" +
-            "  \"lastName\": \"Menu\",\n" +
-            "  \"medications\": [\n" +
-            "    \"Dolliprane\"\n" +
-            "  ]\n" +
-            "\n" +
+            "  \"address\": \"29 14th St\",\n" +
+            "  \"station\": \"2\"\n" +
             "}";
+
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void testAddMedicalRecord() throws Exception {
+    public void testAddFirestation() throws Exception {
         final ResultActions result =
                 mockMvc.perform(
-                        post("/medicalRecord")
+                        post("/firestation")
                                 .content(jsonPost)
                                 .contentType(MediaType.APPLICATION_JSON));
         result
@@ -58,15 +54,15 @@ public class MedicalRecordControllerTests {
     }
 
     @Test
-    public void testAddMedicalRecord_ShouldReturn400_OnMedicalRecordAlreadyCreated() throws Exception {
+    public void testAddFirestation_ShouldReturn400_OnFirestationAlreadyCreated() throws Exception {
         mockMvc.perform(
-                post("/medicalRecord")
+                post("/firestation")
                         .content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON));
 
         final ResultActions result =
                 mockMvc.perform(
-                        post("/medicalRecord")
+                        post("/firestation")
                                 .content(jsonPost)
                                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -74,13 +70,13 @@ public class MedicalRecordControllerTests {
     }
 
     @Test
-    public void testUpdateMedicalRecord() throws Exception {
+    public void testUpdateFirestation() throws Exception {
         mockMvc.perform(
-                post("/medicalRecord")
+                post("/firestation")
                         .content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON));
         final ResultActions result = mockMvc.perform(
-                put("/medicalRecord")
+                put("/firestation")
                         .content(jsonPut)
                         .contentType(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk()).andExpect(content()
@@ -89,25 +85,45 @@ public class MedicalRecordControllerTests {
     }
 
     @Test
-    public void testDeleteMedicalRecord() throws Exception {
+    public void testDeleteFirestation() throws Exception {
         mockMvc.perform(
-                post("/medicalRecord")
+                post("/firestation")
                         .content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON));
         final ResultActions result = mockMvc.perform(
-                delete("/medicalRecord")
-                        .param("firstName", "Noémie")
-                        .param("lastName", "Menu"));
+                delete("/firestation")
+                        .param("station", "2")
+                        .param("address", "29 14th St"));
         result.andExpect(status().isOk());
 
     }
 
     @Test
-    public void testDeleteMedicalRecord_ShouldReturn400_OnMedicalRecordAlreadyDeleted() throws Exception {
+    public void testDeleteFirestation_ShouldReturn400_OnFirestationAlreadyDeleted() throws Exception {
         final ResultActions result = mockMvc.perform(
-                delete("/medicalRecord")
-                        .param("firstName", "Noémie")
-                        .param("lastName", "Menu"));
+                delete("/firestation")
+                        .param("station", "5")
+                        .param("address"," " ));
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetFirestations() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/firestations").param("stationNumber", "3")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+        PersonsInFirestationNumberResponse personsInFirestationNumberResponse = gson.fromJson(response.getContentAsString(), PersonsInFirestationNumberResponse.class);
+
+        Assert.assertTrue(personsInFirestationNumberResponse.getAdults() > 0);
+        Assert.assertTrue(personsInFirestationNumberResponse.getChildren() > 0);
+        Assert.assertTrue(personsInFirestationNumberResponse.getPersons().size() > 0);
     }
 }

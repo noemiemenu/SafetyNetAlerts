@@ -10,15 +10,10 @@ import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -31,8 +26,8 @@ public class FirestationController {
     private final PersonsRepository personsRepository;
     private final MedicalRecordsRepository medicalRecordsRepository;
 
-    @ApiOperation(value = "Retourner la liste des caserne de pompiers")
-    @GetMapping(value = "firestations")
+    @ApiOperation(value = "Retourner une liste des personnes couvertes par la caserne de pompiers est fournir un décompte du nombre d'adultes et du nombre d'enfants")
+    @GetMapping("/firestations")
     public PersonsInFirestationNumberResponse getPersonsFromFirestationNumber(@RequestParam String stationNumber) {
         List<String> addresses = firestationsRepository.getFirestationsByStation(stationNumber);
         List<Person> people = personsRepository.getPeopleByAddresses(new HashSet<>(addresses));
@@ -59,5 +54,33 @@ public class FirestationController {
         return new PersonsInFirestationNumberResponse(people, childrenNumber, adultsNumber);
     }
 
+    @ApiOperation(value ="Ajout d'une nouvelle firestation")
+    @PostMapping("/firestation")
+    public ResponseEntity addFirestations(@RequestBody Firestation firestation){
+        Firestation firestationFromDataBase = firestationsRepository.getFirestationsByStationAndAddress(firestation.getStation(),
+                firestation.getAddress());
+        if (firestationFromDataBase != null) {
+            return ResponseEntity.badRequest().body("Firestation already created");
+        }
+        Firestation savedFirestation = firestationsRepository.save(firestation);
+        return ResponseEntity.created(null).body(savedFirestation);
+    }
 
+    @ApiOperation(value = "Mettre à jour une firestation")
+    @PutMapping("/firestation")
+    public Firestation updateFirestation(@RequestBody Firestation firestation) {
+        return firestationsRepository.save(firestation);
+    }
+
+    @ApiOperation(value = "Supprime une firestation")
+    @DeleteMapping("/firestation")
+    public ResponseEntity deleteFirestation(@RequestParam String station, @RequestParam String address) {
+        Firestation firestation = firestationsRepository.getFirestationsByStationAndAddress(station, address);
+
+        if (firestation == null) {
+            return ResponseEntity.badRequest().body("Firestation not found");
+        }
+        firestationsRepository.delete(firestation);
+        return ResponseEntity.ok().build();
+    }
 }

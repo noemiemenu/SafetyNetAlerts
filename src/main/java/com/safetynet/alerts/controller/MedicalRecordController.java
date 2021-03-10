@@ -20,9 +20,9 @@ public class MedicalRecordController {
 
     @ApiOperation(value = "Ajouter un dossier médical")
     @PostMapping()
-    public ResponseEntity addMedicalRecord(@RequestBody MedicalRecord medicalRecord){
-        MedicalRecord medicalRecordFromDataBase = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(medicalRecord.getFirstName(),medicalRecord.getLastName());
-        if (medicalRecordFromDataBase != null){
+    public ResponseEntity addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+        MedicalRecord medicalRecordFromDataBase = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(medicalRecord.getFirstName(), medicalRecord.getLastName());
+        if (medicalRecordFromDataBase != null) {
             return ResponseEntity.badRequest().body("Medical record already created");
         }
         MedicalRecord savedMedicalRecord = medicalRecordsRepository.save(medicalRecord);
@@ -31,16 +31,16 @@ public class MedicalRecordController {
 
     @ApiOperation(value = "Mettre à jour un dossier médical")
     @PutMapping()
-    public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord){
-       return medicalRecordsRepository.save(medicalRecord);
+    public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+        return medicalRecordsRepository.save(medicalRecord);
     }
 
     @ApiOperation(value = "Supprime un dossier médical")
     @DeleteMapping()
-    public ResponseEntity deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName){
+    public ResponseEntity deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
         MedicalRecord medicalRecord = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
 
-        if (medicalRecord == null){
+        if (medicalRecord == null) {
             return ResponseEntity.badRequest().body("medical record not found");
         }
         medicalRecordsRepository.delete(medicalRecord);

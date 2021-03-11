@@ -1,7 +1,7 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.MedicalRecord;
-import com.safetynet.alerts.repositories.MedicalRecordsRepository;
+import com.safetynet.alerts.service.MedicalRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -16,35 +16,24 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MedicalRecordController {
 
-    private final MedicalRecordsRepository medicalRecordsRepository;
+    private final MedicalRecordService medicalRecordService;
 
     @ApiOperation(value = "Ajouter un dossier médical")
     @PostMapping()
     public ResponseEntity addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
-        MedicalRecord medicalRecordFromDataBase = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(medicalRecord.getFirstName(), medicalRecord.getLastName());
-        if (medicalRecordFromDataBase != null) {
-            return ResponseEntity.badRequest().body("Medical record already created");
-        }
-        MedicalRecord savedMedicalRecord = medicalRecordsRepository.save(medicalRecord);
-        return ResponseEntity.created(null).body(savedMedicalRecord);
+        return medicalRecordService.addMedicalRecord(medicalRecord);
     }
 
     @ApiOperation(value = "Mettre à jour un dossier médical")
     @PutMapping()
     public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
-        return medicalRecordsRepository.save(medicalRecord);
+        return medicalRecordService.updateMedicalRecord(medicalRecord);
     }
 
     @ApiOperation(value = "Supprime un dossier médical")
     @DeleteMapping()
     public ResponseEntity deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
-        MedicalRecord medicalRecord = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
-
-        if (medicalRecord == null) {
-            return ResponseEntity.badRequest().body("medical record not found");
-        }
-        medicalRecordsRepository.delete(medicalRecord);
-        return ResponseEntity.ok().build();
+        return medicalRecordService.deleteMedicalRecord(firstName, lastName);
     }
 
 

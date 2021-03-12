@@ -52,8 +52,7 @@ public class FirestationService {
     }
 
     public ResponseEntity addFirestations(@RequestBody Firestation firestation){
-        Firestation firestationFromDataBase = firestationsRepository.getFirestationsByStationAndAddress(firestation.getStation(),
-                firestation.getAddress());
+        Firestation firestationFromDataBase = firestationsRepository.getFirestationsByAddressAndStation(firestation.getAddress(), firestation.getStation());
         if (firestationFromDataBase != null) {
             return ResponseEntity.badRequest().body("Firestation already created");
         }
@@ -65,8 +64,8 @@ public class FirestationService {
         return firestationsRepository.save(firestation);
     }
 
-    public ResponseEntity deleteFirestation(@RequestParam String station, @RequestParam String address) {
-        Firestation firestation = firestationsRepository.getFirestationsByStationAndAddress(station, address);
+    public ResponseEntity deleteFirestation(@RequestParam String address, @RequestParam String station) {
+        Firestation firestation = firestationsRepository.getFirestationsByAddressAndStation(address, station);
 
         if (firestation == null) {
             return ResponseEntity.badRequest().body("Firestation not found");

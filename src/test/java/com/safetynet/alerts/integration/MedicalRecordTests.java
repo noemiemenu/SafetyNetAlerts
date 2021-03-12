@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class MedicalRecordControllerTests {
+public class MedicalRecordTests {
 
     private static final String jsonPost = "{\n" +
             "\t\"firstName\": \"Noémie\",\n" +

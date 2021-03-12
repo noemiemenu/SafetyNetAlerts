@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class FirestationControllerTests {
+public class FirestationTests {
 
     private static final String jsonPost = "{\n" +
             "      \"address\": \"29 14th St\",\n" +
@@ -92,8 +92,8 @@ public class FirestationControllerTests {
                         .contentType(MediaType.APPLICATION_JSON));
         final ResultActions result = mockMvc.perform(
                 delete("/firestation")
-                        .param("station", "2")
-                        .param("address", "29 14th St"));
+                        .param("address", "29 14th St")
+                        .param("station", "2"));
         result.andExpect(status().isOk());
 
     }

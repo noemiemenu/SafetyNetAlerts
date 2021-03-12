@@ -17,7 +17,6 @@ import javax.persistence.*;
 public class Person {
 
     @Id
-    @JsonIgnore
     @GeneratedValue
     private Integer id;
 

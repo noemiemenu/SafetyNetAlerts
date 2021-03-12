@@ -37,7 +37,7 @@ public class FirestationController {
 
     @ApiOperation(value = "Supprime une firestation")
     @DeleteMapping("/firestation")
-    public ResponseEntity deleteFirestation(@RequestParam String station, @RequestParam String address) {
-        return firestationService.deleteFirestation(station, address);
+    public ResponseEntity deleteFirestation(@RequestParam String address, @RequestParam String station) {
+        return firestationService.deleteFirestation(address, station);
     }
 }

@@ -2,7 +2,6 @@ package com.safetynet.alerts.repositories;
 
 
 import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.model.Person;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,7 +12,6 @@ public interface FirestationsRepository extends CrudRepository<Firestation, Inte
     @Query("select firestation.address from Firestation firestation where firestation.station = :station")
     List<String> getFirestationsByStation(String station);
 
-    Firestation getFirestationsByStationAndAddress(String station, String address);
+    Firestation getFirestationsByAddressAndStation(String address, String station);
 
-    Firestation getFirestationByAddress(String address);
 }

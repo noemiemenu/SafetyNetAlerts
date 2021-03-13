@@ -1,13 +1,21 @@
 package com.safetynet.alerts.integration;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -107,5 +115,24 @@ public class PersonTests {
                         .param("firstName", "Noemie")
                         .param("lastName", "Menu"));
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetEmailOfAllPersonsInTheCity() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/communityEmail").param("city", "Culver")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+        List<String> personEmail = new ArrayList<>();
+        personEmail = gson.fromJson(response.getContentAsString(), personEmail.getClass());
+
+        Assertions.assertTrue(personEmail.size() > 0);
     }
 }

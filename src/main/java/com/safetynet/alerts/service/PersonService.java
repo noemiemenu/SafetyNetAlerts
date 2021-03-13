@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PersonService {
@@ -36,6 +38,10 @@ public class PersonService {
         }
         personsRepository.delete(person);
         return ResponseEntity.ok().build();
+    }
+
+    public List<String> getEmailOfAllPersonsInTheCity(String city) {
+        return personsRepository.getPeopleEmailByCity(city);
     }
 
 

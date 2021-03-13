@@ -2,10 +2,12 @@ package com.safetynet.alerts.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name="medical_records")
+@Table(name = "medical_records")
 public class MedicalRecord {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";
@@ -27,7 +29,7 @@ public class MedicalRecord {
     private String lastName;
 
     @ApiModelProperty(required = true, example = "30/12/2020")
-    @JsonFormat(pattern=DATE_FORMAT)
+    @JsonFormat(pattern = DATE_FORMAT)
     private Date birthdate;
 
     @ElementCollection

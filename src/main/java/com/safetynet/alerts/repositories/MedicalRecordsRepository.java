@@ -6,5 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MedicalRecordsRepository extends CrudRepository<MedicalRecord, Integer> {
     MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName);
+
     MedicalRecord getMedicalRecordById(int id);
 }

@@ -51,7 +51,7 @@ public class FirestationService {
         return new PersonsInFirestationNumberResponse(people, childrenNumber, adultsNumber);
     }
 
-    public ResponseEntity addFirestations(@RequestBody Firestation firestation){
+    public ResponseEntity addFirestations(@RequestBody Firestation firestation) {
         Firestation firestationFromDataBase = firestationsRepository.getFirestationsByAddressAndStation(firestation.getAddress(), firestation.getStation());
         if (firestationFromDataBase != null) {
             return ResponseEntity.badRequest().body("Firestation already created");

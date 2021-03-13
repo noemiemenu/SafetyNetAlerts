@@ -3,7 +3,6 @@ package com.safetynet.alerts.integration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -125,4 +127,23 @@ public class FirestationTests {
         Assertions.assertTrue(personsInFirestationNumberResponse.getChildren() > 0);
         Assertions.assertTrue(personsInFirestationNumberResponse.getPersons().size() > 0);
     }
+
+    @Test
+    public void testGetPhoneOfPersonToStationNumber() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/phoneAlert").param("firestation", "3")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        List<String> personPhone = new ArrayList<>();
+        personPhone = gson.fromJson(response.getContentAsString(), personPhone.getClass());
+
+        Assertions.assertTrue(personPhone.size() > 0);
+    }
+
 }

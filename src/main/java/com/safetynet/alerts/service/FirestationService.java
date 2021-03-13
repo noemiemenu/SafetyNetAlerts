@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -83,6 +81,15 @@ public class FirestationService {
         log.info("Reply 200 (OK) to: " + request.getRequestURI(),address, station);
         return ResponseEntity.ok().build();
     }
+
+    public List<String> getPhoneOfPersonToStationNumber(String firestation) {
+        List<String> addresses = firestationsRepository.getFirestationsByStation(firestation);
+        log.info("Reply 200 (OK) to: " + request.getRequestURI(),firestation);
+        return personsRepository.getPeoplePhoneByAddresses(new HashSet<>(addresses));
+
+    }
+
+
 
 
 }

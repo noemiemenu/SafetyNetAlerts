@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Api("Gestion des Firestation ")
 @RestController
@@ -48,5 +49,13 @@ public class FirestationController {
     public ResponseEntity deleteFirestation(@RequestParam String address, @RequestParam String station) {
         log.info("Request to: " + request.getRequestURI(), address, station);
         return firestationService.deleteFirestation(address, station);
+    }
+
+    @ApiOperation(value = "Retourner une liste de Numero de telephone")
+    @GetMapping("/phoneAlert")
+    public List<String> getPhoneOfPersonToStationNumber(@RequestParam String firestation){
+        log.info("Request to: " + request.getRequestURI(), firestation);
+        return firestationService.getPhoneOfPersonToStationNumber(firestation);
+
     }
 }

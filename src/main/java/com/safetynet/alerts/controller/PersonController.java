@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api("Gestion des person")
@@ -18,28 +19,33 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
+    private final HttpServletRequest request;
 
-    @ApiOperation(value = "Ajouter d'une Person")
+    @ApiOperation(value = "Ajout d'une personne")
     @PostMapping("/person")
     public ResponseEntity addPerson(@RequestBody Person person) {
+        log.info("Request to: " + request.getRequestURI(), person);
         return personService.addPerson(person);
     }
 
-    @ApiOperation(value = "Mettre à jour un person")
+    @ApiOperation(value = "Mettre à jour un personne")
     @PutMapping("/person")
     public Person updatePerson(@RequestBody Person person) {
+        log.info("Request to: " + request.getRequestURI(), person);
         return personService.updatePerson(person);
     }
 
-    @ApiOperation(value = "Supprime un dossier médical")
+    @ApiOperation(value = "Supprime une personne")
     @DeleteMapping("/person")
     public ResponseEntity deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
+        log.info("Request to: " + request.getRequestURI(), firstName, lastName);
         return personService.deletePerson(firstName, lastName);
     }
 
-    @ApiOperation(value = "Retourner une liste d'adresse mail'")
+    @ApiOperation(value = "Retourner une liste d'adresse mail")
     @GetMapping("/communityEmail")
     public List<String> getEmailOfAllPersonsInTheCity(@RequestParam String city) {
+        log.info("Request to: " + request.getRequestURI(), city);
         return personService.getEmailOfAllPersonsInTheCity(city);
     }
 

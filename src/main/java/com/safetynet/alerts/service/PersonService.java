@@ -3,9 +3,11 @@ package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.model.PersonInfo;
 import com.safetynet.alerts.repositories.MedicalRecordsRepository;
 import com.safetynet.alerts.repositories.PersonsRepository;
 import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
+import com.safetynet.alerts.responses.PersonInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +100,12 @@ public class PersonService {
         }
 
         return childrenWithFamilyResponse;
+    }
+
+
+    public PersonInfoResponse getPersonInfo(String firstName, String lastName) {
+        List<PersonInfo> personInfos = personsRepository.getPeopleInfoByFirstNameAndLastName(firstName, lastName);
+
+        return new PersonInfoResponse(personInfos);
     }
 }

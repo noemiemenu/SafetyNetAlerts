@@ -17,6 +17,10 @@ public interface PersonsRepository extends CrudRepository<Person, Integer> {
     @Query("select person from Person person where person.address in :addresses")
     List<Person> getPeopleByAddresses(Set<String> addresses);
 
+    List<Person> getPeopleByAddress(String address);
+
     @Query("select person.phone from Person person where person.address in :addresses")
     List<String> getPeoplePhoneByAddresses(Set<String> addresses);
+
+
 }

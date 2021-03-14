@@ -49,4 +49,11 @@ public class PersonController {
         return personService.getEmailOfAllPersonsInTheCity(city);
     }
 
+    @ApiOperation(value = "Retourner une liste d'enfants")
+    @GetMapping("/childAlert")
+    public List<Person> getChild(@RequestParam String address){
+        return personService.getChild(address);
+    }
+
+
 }

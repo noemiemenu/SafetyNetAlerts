@@ -10,7 +10,7 @@ import java.util.List;
 public interface FirestationsRepository extends CrudRepository<Firestation, Integer> {
 
     @Query("select firestation.address from Firestation firestation where firestation.station = :station")
-    List<String> getFirestationsByStation(String station);
+    List<String> getFirestationsAddressByStation(String station);
 
     Firestation getFirestationsByAddressAndStation(String address, String station);
 

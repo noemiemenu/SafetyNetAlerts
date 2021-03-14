@@ -1,17 +1,19 @@
 package com.safetynet.alerts.service;
 
 
+import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.repositories.MedicalRecordsRepository;
 import com.safetynet.alerts.repositories.PersonsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +22,7 @@ public class PersonService {
 
     private final PersonsRepository personsRepository;
     private final HttpServletRequest request;
+    private final MedicalRecordsRepository medicalRecordsRepository;
 
     public ResponseEntity addPerson(Person person) {
         Person personFromDataBase = personsRepository.getPeopleByFirstNameAndLastName(person.getFirstName(), person.getLastName());
@@ -54,5 +57,26 @@ public class PersonService {
         return personsRepository.getPeopleEmailByCity(city);
     }
 
+    public void calculateChild(List<Person> people){
+        LocalDateTime now = LocalDateTime.now();
 
+        for (Person person : people) {
+            MedicalRecord medicalRecord =
+                    medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(
+                            person.getFirstName(),
+                            person.getLastName()
+                    );
+
+            log.debug("Sort by date of birth: " + request.getRequestURI(), person);
+            int year = medicalRecord.getBirthdate().getYear() + 1900;
+            int nowYear = now.getYear();
+            person.setChild(nowYear - year <= 18);
+        }
+    }
+
+    public List<Person> getChild(String address) {
+        List<Person> people = personsRepository.getPeopleByAddress(address);
+        calculateChild(people);
+        return people.stream().filter(Person::isChild).collect(Collectors.toList());
+    }
 }

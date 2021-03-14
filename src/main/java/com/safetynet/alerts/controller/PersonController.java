@@ -1,6 +1,7 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
 import com.safetynet.alerts.service.PersonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,8 +52,8 @@ public class PersonController {
 
     @ApiOperation(value = "Retourner une liste d'enfants")
     @GetMapping("/childAlert")
-    public List<Person> getChild(@RequestParam String address){
-        return personService.getChild(address);
+    public ChildrenWithFamilyResponse getChildren(@RequestParam String address){
+        return personService.getChildren(address);
     }
 
 

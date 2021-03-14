@@ -22,5 +22,5 @@ public interface PersonsRepository extends CrudRepository<Person, Integer> {
     @Query("select person.phone from Person person where person.address in :addresses")
     List<String> getPeoplePhoneByAddresses(Set<String> addresses);
 
-
+    List<Person> getPeopleByLastNameAndAddressAndCityAndZip(String lastName, String address, String city, String zip);
 }

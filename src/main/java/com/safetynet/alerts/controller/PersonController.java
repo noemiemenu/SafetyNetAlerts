@@ -2,6 +2,7 @@ package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
+import com.safetynet.alerts.responses.PersonInfoResponse;
 import com.safetynet.alerts.service.PersonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,5 +57,10 @@ public class PersonController {
         return personService.getChildren(address);
     }
 
-
+    @ApiOperation(value = "Retourner des information sur une personne")
+    @GetMapping("/personInfo")
+    public PersonInfoResponse getPersonInfo(@RequestParam String firstName, String lastName) {
+        log.info("Request to: " + request.getRequestURI(), firstName, lastName);
+        return personService.getPersonInfo(firstName, lastName);
+    }
 }

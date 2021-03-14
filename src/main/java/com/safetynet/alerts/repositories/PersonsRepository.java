@@ -1,6 +1,7 @@
 package com.safetynet.alerts.repositories;
 
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.model.PersonInfo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -19,8 +20,11 @@ public interface PersonsRepository extends CrudRepository<Person, Integer> {
 
     List<Person> getPeopleByAddress(String address);
 
-    @Query("select person.phone from Person person where person.address in :addresses")
+    @Query("select person.phone from Person person, MedicalRecord medicalRecord where person.address in :addresses")
     List<String> getPeoplePhoneByAddresses(Set<String> addresses);
 
     List<Person> getPeopleByLastNameAndAddressAndCityAndZip(String lastName, String address, String city, String zip);
+
+    @Query("select new com.safetynet.alerts.model.PersonInfo(person.lastName, person.email, person.address, medicalRecord) from Person person, MedicalRecord medicalRecord where medicalRecord.firstName=:firstName and medicalRecord.lastName=:lastName and person.firstName=:firstName and person.lastName=:lastName")
+    List<PersonInfo> getPeopleInfoByFirstNameAndLastName(String firstName, String lastName);
 }

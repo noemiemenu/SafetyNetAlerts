@@ -3,6 +3,7 @@ package com.safetynet.alerts.integration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
+import com.safetynet.alerts.responses.PersonInfoResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,4 +174,26 @@ public class PersonTests {
         Assertions.assertEquals(0, childrenWithFamilyResponse.getChildren().size());
 
     }
+
+     @Test
+    public void testGetPersonInfo() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/personInfo")
+                        .param("firstName", "John")
+                        .param("lastName", "Boyd"));
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+        PersonInfoResponse personInfoResponse = gson.fromJson(response.getContentAsString(), PersonInfoResponse.class);
+        Assertions.assertNotNull(personInfoResponse.getPeople().size() > 0);
+
+
+    }
+
+
 }

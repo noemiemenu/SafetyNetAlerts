@@ -2,7 +2,7 @@ package com.safetynet.alerts.integration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,5 +134,43 @@ public class PersonTests {
         personEmail = gson.fromJson(response.getContentAsString(), personEmail.getClass());
 
         Assertions.assertTrue(personEmail.size() > 0);
+    }
+
+    @Test
+    public void testGetChildren() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/childAlert").param("address", "1509 Culver St")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+        ChildrenWithFamilyResponse childrenWithFamilyResponse = gson.fromJson(response.getContentAsString(), ChildrenWithFamilyResponse.class);
+        Assertions.assertTrue(childrenWithFamilyResponse.getChildren().size() > 0);
+        ChildrenWithFamilyResponse.ChildWithFamily childWithFamily = childrenWithFamilyResponse.getChildren().get(0);
+        Assertions.assertNotNull(childWithFamily.getChild());
+        Assertions.assertNotNull(childWithFamily.getChildAge());
+        Assertions.assertTrue(childWithFamily.getFamily().size() > 0);
+    }
+    @Test
+    public void testGetChildren_withNoChildrenInResponse() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/childAlert").param("address", "AZE")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+        ChildrenWithFamilyResponse childrenWithFamilyResponse = gson.fromJson(response.getContentAsString(), ChildrenWithFamilyResponse.class);
+        Assertions.assertEquals(0, childrenWithFamilyResponse.getChildren().size());
+
     }
 }

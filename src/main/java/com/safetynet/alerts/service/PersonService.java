@@ -5,6 +5,7 @@ import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repositories.MedicalRecordsRepository;
 import com.safetynet.alerts.repositories.PersonsRepository;
+import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,11 +56,11 @@ public class PersonService {
     }
 
     public List<String> getEmailOfAllPersonsInTheCity(String city) {
-        log.info("Reply 200 (OK) to: " + request.getRequestURI(),city);
+        log.info("Reply 200 (OK) to: " + request.getRequestURI(), city);
         return personsRepository.getPeopleEmailByCity(city);
     }
 
-    public void calculateChild(List<Person> people){
+    public void calculateChild(List<Person> people) {
         LocalDateTime now = LocalDateTime.now();
 
         for (Person person : people) {
@@ -74,9 +77,26 @@ public class PersonService {
         }
     }
 
-    public List<Person> getChild(String address) {
+    public ChildrenWithFamilyResponse getChildren(String address) {
         List<Person> people = personsRepository.getPeopleByAddress(address);
         calculateChild(people);
-        return people.stream().filter(Person::isChild).collect(Collectors.toList());
+        List<Person> childs = people.stream().filter(Person::isChild).collect(Collectors.toList());
+        ChildrenWithFamilyResponse childrenWithFamilyResponse = new ChildrenWithFamilyResponse(new ArrayList<>());
+        if (childs.size() == 0) return childrenWithFamilyResponse;
+
+        for (Person child : childs) {
+            ChildrenWithFamilyResponse.ChildWithFamily childWithFamily = new ChildrenWithFamilyResponse.ChildWithFamily();
+            childWithFamily.setChild(child);
+            Date childAge = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName()).getBirthdate();
+            childWithFamily.setChildAge(childAge);
+            List<Person> childFamily = personsRepository.getPeopleByLastNameAndAddressAndCityAndZip(child.getLastName(), child.getAddress(), child.getCity(), child.getZip());
+
+            childFamily = childFamily.stream().filter(person -> !person.getFirstName().equals(child.getFirstName())).collect(Collectors.toList());
+            childWithFamily.setFamily(childFamily);
+
+            childrenWithFamilyResponse.getChildren().add(childWithFamily);
+        }
+
+        return childrenWithFamilyResponse;
     }
 }

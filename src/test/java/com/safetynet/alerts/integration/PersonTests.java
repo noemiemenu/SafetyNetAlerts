@@ -2,6 +2,7 @@ package com.safetynet.alerts.integration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.safetynet.alerts.model.PersonInfo;
 import com.safetynet.alerts.responses.ChildrenWithFamilyResponse;
 import com.safetynet.alerts.responses.PersonInfoResponse;
 import org.junit.jupiter.api.Assertions;
@@ -190,9 +191,15 @@ public class PersonTests {
         Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
 
         PersonInfoResponse personInfoResponse = gson.fromJson(response.getContentAsString(), PersonInfoResponse.class);
-        Assertions.assertNotNull(personInfoResponse.getPeople().size() > 0);
+        Assertions.assertNotNull(personInfoResponse.getPeople());
 
-
+        PersonInfo personInfo = personInfoResponse.getPeople().get(0);
+        Assertions.assertTrue(personInfo.getAllergies().size() > 0);
+        Assertions.assertTrue(personInfo.getMedications().size() > 0);
+        Assertions.assertNotNull(personInfo.getBirthdate());
+        Assertions.assertTrue(personInfo.getLastName().length() > 0);
+        Assertions.assertTrue(personInfo.getEmail().length() > 0);
+        Assertions.assertTrue(personInfo.getAddress().length() > 0);
     }
 
 

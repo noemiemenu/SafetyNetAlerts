@@ -2,9 +2,11 @@ package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.model.PersonInfoWithPhone;
 import com.safetynet.alerts.repositories.FirestationsRepository;
 import com.safetynet.alerts.repositories.MedicalRecordsRepository;
 import com.safetynet.alerts.repositories.PersonsRepository;
+import com.safetynet.alerts.responses.ListOfPersonServedByTheseFireStationResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +74,12 @@ public class FirestationService {
         log.info("Reply 200 (OK) to: " + request.getRequestURI(),firestation);
         return personsRepository.getPeoplePhoneByAddresses(new HashSet<>(addresses));
 
+    }
+
+    public ListOfPersonServedByTheseFireStationResponse getListOfHomes(String station) {
+        List<String> addresses = firestationsRepository.getFirestationsAddressByStation(station);
+        List<PersonInfoWithPhone> peopleList = firestationsRepository.getPeopleByStations(new HashSet<>(addresses));
+        return new ListOfPersonServedByTheseFireStationResponse(peopleList);
     }
 
 

@@ -1,6 +1,7 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Firestation;
+import com.safetynet.alerts.responses.ListOfPersonServedByTheseFireStationResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import com.safetynet.alerts.service.FirestationService;
 import io.swagger.annotations.Api;
@@ -56,6 +57,13 @@ public class FirestationController {
     public List<String> getPhoneOfPersonToStationNumber(@RequestParam String firestation){
         log.info("Request to: " + request.getRequestURI(), firestation);
         return firestationService.getPhoneOfPersonToStationNumber(firestation);
+
+    }
+
+    @ApiOperation(value = "Retourner une liste de foyers")
+    @GetMapping("/flood/stations")
+    public ListOfPersonServedByTheseFireStationResponse getFloodStations(@RequestParam String stations){
+        return firestationService.getListOfHomes(stations);
 
     }
 }

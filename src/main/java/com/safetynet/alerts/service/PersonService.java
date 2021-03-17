@@ -105,7 +105,6 @@ public class PersonService {
 
     public PersonInfoResponse getPersonInfo(String firstName, String lastName) {
         List<PersonInfo> personInfos = personsRepository.getPeopleInfoByFirstNameAndLastName(firstName, lastName);
-
         return new PersonInfoResponse(personInfos);
     }
 }

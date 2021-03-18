@@ -17,9 +17,12 @@ public interface FirestationsRepository extends CrudRepository<Firestation, Inte
     @Query("select firestation.address from Firestation firestation where firestation.station = :station")
     List<String> getFirestationsAddressByStation(String station);
 
+    @Query("select firestation.address from Firestation firestation where firestation.station in :stations")
+    List<String> getFirestationsAddressesByStations(Set<String> stations);
+
     Firestation getFirestationsByAddressAndStation(String address, String station);
 
-    @Query("select new com.safetynet.alerts.model.PersonInfoWithPhone(medicalRecord.firstName, medicalRecord.lastName, person.phone, person.email, person.address, medicalRecord) from Person person, MedicalRecord medicalRecord where person.address in :addresses")
+    @Query("select new com.safetynet.alerts.model.PersonInfoWithPhone(person) from Person person where person.address in :addresses")
     List<PersonInfoWithPhone> getPeopleByStations(Set<String> addresses);
 
     @Query("select new com.safetynet.alerts.model.PersonInfoFirestationAddress(person) from Person person, Firestation firestation where firestation.address=:address")

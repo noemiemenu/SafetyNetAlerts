@@ -69,7 +69,7 @@ public class FirestationController {
 
     @ApiOperation(value = "Retourner une liste de foyers")
     @GetMapping("/flood/stations")
-    public ListOfPersonServedByTheseFireStationResponse getFloodStations(@RequestParam String stations){
+    public ListOfPersonServedByTheseFireStationResponse getFloodStations(@RequestParam List<String> stations){
         return firestationService.getListOfHomes(stations);
 
     }

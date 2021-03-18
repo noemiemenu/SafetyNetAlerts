@@ -25,6 +25,7 @@ public interface PersonsRepository extends CrudRepository<Person, Integer> {
 
     List<Person> getPeopleByLastNameAndAddressAndCityAndZip(String lastName, String address, String city, String zip);
 
+    //where p.ADDRESS='1509 Culver St' and p.FIRST_NAME = mr.FIRST_NAME and p.LAST_NAME = mr.LAST_NAME
     @Query("select new com.safetynet.alerts.model.PersonInfo(person.lastName, person.email, person.address, medicalRecord) from Person person, MedicalRecord medicalRecord where medicalRecord.firstName=:firstName and medicalRecord.lastName=:lastName and person.firstName=:firstName and person.lastName=:lastName")
     List<PersonInfo> getPeopleInfoByFirstNameAndLastName(String firstName, String lastName);
 }

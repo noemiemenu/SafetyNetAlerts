@@ -2,6 +2,8 @@ package com.safetynet.alerts.integration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.safetynet.alerts.model.PersonInfoFirestationAddress;
+import com.safetynet.alerts.responses.PersonsInFirestationAddressResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -144,6 +146,30 @@ public class FirestationTests {
         personPhone = gson.fromJson(response.getContentAsString(), personPhone.getClass());
 
         Assertions.assertTrue(personPhone.size() > 0);
+    }
+
+    @Test
+    public void testGetPeopleByFirestationAddress() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/fire").param("address", "1509 Culver St")
+        );
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        PersonsInFirestationAddressResponse personsInFirestationAddressResponse = gson.fromJson(response.getContentAsString(), PersonsInFirestationAddressResponse.class);
+        Assertions.assertTrue(personsInFirestationAddressResponse.getPersons().size() > 0);
+        Assertions.assertNotNull(personsInFirestationAddressResponse.getStationNumber());
+
+        PersonInfoFirestationAddress personInfoFirestationAddress = personsInFirestationAddressResponse.getPersons().get(0);
+        Assertions.assertNotNull(personInfoFirestationAddress);
+        Assertions.assertNotNull(personInfoFirestationAddress.getAllergies());
+        Assertions.assertNotNull(personInfoFirestationAddress.getBirthdate());
+        Assertions.assertNotNull(personInfoFirestationAddress.getMedications());
+
     }
 
 }

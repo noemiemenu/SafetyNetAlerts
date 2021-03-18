@@ -2,6 +2,7 @@ package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.responses.ListOfPersonServedByTheseFireStationResponse;
+import com.safetynet.alerts.responses.PersonsInFirestationAddressResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import com.safetynet.alerts.service.FirestationService;
 import io.swagger.annotations.Api;
@@ -58,6 +59,12 @@ public class FirestationController {
         log.info("Request to: " + request.getRequestURI(), firestation);
         return firestationService.getPhoneOfPersonToStationNumber(firestation);
 
+    }
+
+    @ApiOperation(value = "retourne la liste des habitants vivant à l’adresse donnée")
+    @GetMapping("/fire")
+    public PersonsInFirestationAddressResponse getPeopleInFirestationAddress(@RequestParam String address){
+        return firestationService.getPeopleByFirestationAddress(address);
     }
 
     @ApiOperation(value = "Retourner une liste de foyers")

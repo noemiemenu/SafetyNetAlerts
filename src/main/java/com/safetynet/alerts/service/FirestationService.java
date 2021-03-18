@@ -82,10 +82,10 @@ public class FirestationService {
 
         for (PersonInfoFirestationAddress person : personInfoFirestationAddresses) {
             MedicalRecord medicalRecord = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
-
+            log.debug("Calculating MedicalRecord for " + person.getFirstName());
             person.setMedicalRecordFields(medicalRecord);
         }
-
+        log.info("Reply 200 (OK) to: " + request.getRequestURI(),address);
         return new PersonsInFirestationAddressResponse(firestationsRepository.getStationNumberOfFirestationByAddress(address), personInfoFirestationAddresses);
     }
 }

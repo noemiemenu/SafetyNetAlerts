@@ -1,12 +1,10 @@
 package com.safetynet.alerts.service;
 
-import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.model.MedicalRecord;
-import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.model.PersonInfoFirestationAddress;
+import com.safetynet.alerts.model.*;
 import com.safetynet.alerts.repositories.FirestationsRepository;
 import com.safetynet.alerts.repositories.MedicalRecordsRepository;
 import com.safetynet.alerts.repositories.PersonsRepository;
+import com.safetynet.alerts.responses.ListOfPersonServedByTheseFireStationResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationAddressResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import lombok.AllArgsConstructor;
@@ -77,15 +75,28 @@ public class FirestationService {
 
     }
 
+    public ListOfPersonServedByTheseFireStationResponse getListOfHomes(List<String> stations) {
+        List<String> addresses = firestationsRepository.getFirestationsAddressesByStations(new HashSet<>(stations));
+        List<PersonInfoWithPhone> peopleList = firestationsRepository.getPeopleByStations(new HashSet<>(addresses));
+        setMedicalRecordFieldsToPersonList(peopleList);
+        log.info("Reply 200 (OK) to: " + request.getRequestURI(), stations);
+        return new ListOfPersonServedByTheseFireStationResponse(peopleList);
+    }
+
+
     public PersonsInFirestationAddressResponse getPeopleByFirestationAddress(String address) {
         List<PersonInfoFirestationAddress> personInfoFirestationAddresses = firestationsRepository.getPeopleByFirestationAddress(address);
 
-        for (PersonInfoFirestationAddress person : personInfoFirestationAddresses) {
+        setMedicalRecordFieldsToPersonList(personInfoFirestationAddresses);
+        log.info("Reply 200 (OK) to: " + request.getRequestURI(),address);
+        return new PersonsInFirestationAddressResponse(firestationsRepository.getStationNumberOfFirestationByAddress(address), personInfoFirestationAddresses);
+    }
+
+    private <T extends PersonInfoFirestationAddress> void setMedicalRecordFieldsToPersonList(List<T> personList) {
+        for (T person : personList) {
             MedicalRecord medicalRecord = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
             log.debug("Calculating MedicalRecord for " + person.getFirstName());
             person.setMedicalRecordFields(medicalRecord);
         }
-        log.info("Reply 200 (OK) to: " + request.getRequestURI(),address);
-        return new PersonsInFirestationAddressResponse(firestationsRepository.getStationNumberOfFirestationByAddress(address), personInfoFirestationAddresses);
     }
 }

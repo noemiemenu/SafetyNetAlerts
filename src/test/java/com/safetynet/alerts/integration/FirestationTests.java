@@ -3,6 +3,8 @@ package com.safetynet.alerts.integration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.safetynet.alerts.model.PersonInfoFirestationAddress;
+import com.safetynet.alerts.model.PersonInfoWithPhone;
+import com.safetynet.alerts.responses.ListOfPersonServedByTheseFireStationResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationAddressResponse;
 import com.safetynet.alerts.responses.PersonsInFirestationNumberResponse;
 import org.junit.jupiter.api.Assertions;
@@ -166,10 +168,37 @@ public class FirestationTests {
 
         PersonInfoFirestationAddress personInfoFirestationAddress = personsInFirestationAddressResponse.getPersons().get(0);
         Assertions.assertNotNull(personInfoFirestationAddress);
-        Assertions.assertNotNull(personInfoFirestationAddress.getAllergies());
         Assertions.assertNotNull(personInfoFirestationAddress.getBirthdate());
-        Assertions.assertNotNull(personInfoFirestationAddress.getMedications());
+        Assertions.assertTrue(personInfoFirestationAddress.getAllergies().size() > 0);
+        Assertions.assertNotNull(personInfoFirestationAddress.getMedications().size() > 0);
 
+    }
+
+    @Test
+    public void testGetListOfHomes() throws Exception {
+        final ResultActions result = mockMvc.perform(
+                get("/flood/stations")
+                        .param("stations", "3")
+                        .param("stations", "2"));
+
+        final MockHttpServletResponse response =
+                result.andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        ListOfPersonServedByTheseFireStationResponse listOfPersonServedByTheseFireStationResponse = gson.fromJson(response.getContentAsString(), ListOfPersonServedByTheseFireStationResponse.class);
+        Assertions.assertTrue(listOfPersonServedByTheseFireStationResponse.getPeople().size() > 0);
+        PersonInfoWithPhone personInfoWithPhone = listOfPersonServedByTheseFireStationResponse.getPeople().get(0);
+        Assertions.assertNotNull(personInfoWithPhone);
+        Assertions.assertNotNull(personInfoWithPhone.getFirstName());
+        Assertions.assertNotNull(personInfoWithPhone.getLastName());
+        Assertions.assertNotNull(personInfoWithPhone.getPhone());
+        Assertions.assertNotNull(personInfoWithPhone.getAddress());
+        Assertions.assertNotNull(personInfoWithPhone.getEmail());
+        Assertions.assertNotNull(personInfoWithPhone.getBirthdate());
+        Assertions.assertTrue(personInfoWithPhone.getMedications().size() > 0);
+        Assertions.assertTrue(personInfoWithPhone.getAllergies().size() > 0);
     }
 
 }

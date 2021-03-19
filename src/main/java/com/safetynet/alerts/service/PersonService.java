@@ -86,11 +86,15 @@ public class PersonService {
         ChildrenWithFamilyResponse childrenWithFamilyResponse = new ChildrenWithFamilyResponse(new ArrayList<>());
         if (childs.size() == 0) return childrenWithFamilyResponse;
 
+        LocalDateTime now = LocalDateTime.now();
+
         for (Person child : childs) {
             ChildrenWithFamilyResponse.ChildWithFamily childWithFamily = new ChildrenWithFamilyResponse.ChildWithFamily();
             childWithFamily.setChild(child);
             Date childAge = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName()).getBirthdate();
-            childWithFamily.setChildAge(childAge);
+            int childAgeInteger = childAge.getYear() + 1900;
+            int nowYear = now.getYear();
+            childWithFamily.setChildAge(nowYear - childAgeInteger);
             List<Person> childFamily = personsRepository.getPeopleByLastNameAndAddressAndCityAndZip(child.getLastName(), child.getAddress(), child.getCity(), child.getZip());
 
             childFamily = childFamily.stream().filter(person -> !person.getFirstName().equals(child.getFirstName())).collect(Collectors.toList());

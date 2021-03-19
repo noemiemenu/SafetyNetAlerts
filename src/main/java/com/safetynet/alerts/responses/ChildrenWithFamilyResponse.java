@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,7 +21,7 @@ public class ChildrenWithFamilyResponse {
     @Setter
     public static class ChildWithFamily {
         private Person child;
-        private Date childAge;
+        private int childAge;
         private List<Person> family;
     }
 }

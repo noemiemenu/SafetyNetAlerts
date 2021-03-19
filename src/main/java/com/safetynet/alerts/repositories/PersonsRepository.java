@@ -20,7 +20,7 @@ public interface PersonsRepository extends CrudRepository<Person, Integer> {
 
     List<Person> getPeopleByAddress(String address);
 
-    @Query("select person.phone from Person person, MedicalRecord medicalRecord where person.address in :addresses")
+    @Query("select person.phone from Person person where person.address in :addresses")
     List<String> getPeoplePhoneByAddresses(Set<String> addresses);
 
     List<Person> getPeopleByLastNameAndAddressAndCityAndZip(String lastName, String address, String city, String zip);

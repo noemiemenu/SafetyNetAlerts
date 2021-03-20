@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * FirestationController contains all endpoints concerning a Firestation
+ */
 @Api("Gestion des Firestation ")
 @RestController
 @AllArgsConstructor
@@ -23,7 +26,6 @@ public class FirestationController {
 
     private final FirestationService firestationService;
     private final HttpServletRequest request;
-
 
     @ApiOperation(value = "Retourner une liste des personnes couvertes par la caserne de pompiers est fournir un décompte du nombre d'adultes et du nombre d'enfants")
     @GetMapping("/firestations")

@@ -36,6 +36,7 @@ public class DataLoaderServiceImpl implements IDataLoaderService {
 
 
     /**
+     * DataLoaderServiceImpl: This class load the JSON file and read it
      * @param event
      * @throws IOException
      * @throws ParseException

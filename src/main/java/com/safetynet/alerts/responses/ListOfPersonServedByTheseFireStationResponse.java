@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * List of Person served by these FireStation
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

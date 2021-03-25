@@ -8,6 +8,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+
+/**
+ * Persons in Firestation address
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

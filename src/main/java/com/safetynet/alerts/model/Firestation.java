@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * model Firestation
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

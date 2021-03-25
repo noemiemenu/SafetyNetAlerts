@@ -11,6 +11,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The type Medical record.
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +22,9 @@ import java.util.List;
 @Table(name = "medical_records")
 public class MedicalRecord {
 
+    /**
+     * The constant DATE_FORMAT.
+     */
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
     @Id

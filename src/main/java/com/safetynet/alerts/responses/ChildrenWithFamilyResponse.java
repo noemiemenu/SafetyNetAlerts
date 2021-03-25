@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * List of Children with Family
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,6 +18,10 @@ import java.util.List;
 public class ChildrenWithFamilyResponse {
     private List<ChildWithFamily> children;
 
+
+    /**
+     * Child with Family
+     */
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter

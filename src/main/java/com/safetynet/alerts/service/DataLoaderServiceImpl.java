@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 
+/**
+ * DataLoaderServiceImpl: This class load the JSON file and read it
+ */
 @Component
 @AllArgsConstructor
 public class DataLoaderServiceImpl implements IDataLoaderService {
@@ -36,10 +39,10 @@ public class DataLoaderServiceImpl implements IDataLoaderService {
 
 
     /**
-     * DataLoaderServiceImpl: This class load the JSON file and read it
-     * @param event
-     * @throws IOException
-     * @throws ParseException
+     * EventListener and ApplicationReadyEvent : automate loading of data.json file when the application is ready
+     * @param event the ApplicationReadyEvent from spring boot
+     * @throws IOException if file not found
+     * @throws ParseException if json file is in bad format
      */
     @EventListener
     public void loadDataJsonFileOnStartup(ApplicationReadyEvent event) throws IOException, ParseException {

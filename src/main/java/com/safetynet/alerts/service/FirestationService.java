@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * The type Firestation service.
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -27,6 +30,12 @@ public class FirestationService {
     private final HttpServletRequest request;
     private final PersonService personService;
 
+    /**
+     * Gets persons from firestation number.
+     *
+     * @param stationNumber the station number
+     * @return the persons from firestation number
+     */
     public PersonsInFirestationNumberResponse getPersonsFromFirestationNumber(String stationNumber) {
         List<String> addresses = firestationsRepository.getFirestationsAddressByStation(stationNumber);
         List<Person> people = personsRepository.getPeopleByAddresses(new HashSet<>(addresses));
@@ -40,6 +49,12 @@ public class FirestationService {
         return new PersonsInFirestationNumberResponse(people, childrenNumber, adultsNumber);
     }
 
+    /**
+     * Add firestations response entity.
+     *
+     * @param firestation the firestation
+     * @return the response entity
+     */
     public ResponseEntity addFirestations(Firestation firestation) {
         Firestation firestationFromDataBase = firestationsRepository.getFirestationsByAddressAndStation(firestation.getAddress(), firestation.getStation());
         if (firestationFromDataBase != null) {
@@ -51,11 +66,24 @@ public class FirestationService {
         return ResponseEntity.created(null).body(savedFirestation);
     }
 
+    /**
+     * Update firestation firestation.
+     *
+     * @param firestation the firestation
+     * @return the firestation
+     */
     public Firestation updateFirestation(Firestation firestation) {
         log.info("Reply 200 (OK) to: " + request.getRequestURI(), firestation);
         return firestationsRepository.save(firestation);
     }
 
+    /**
+     * Delete firestation response entity.
+     *
+     * @param address the address
+     * @param station the station
+     * @return the response entity
+     */
     public ResponseEntity deleteFirestation(String address, String station) {
         Firestation firestation = firestationsRepository.getFirestationsByAddressAndStation(address, station);
 
@@ -68,6 +96,12 @@ public class FirestationService {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Gets phone of person to station number.
+     *
+     * @param firestation the firestation
+     * @return the phone of person to station number
+     */
     public List<String> getPhoneOfPersonToStationNumber(String firestation) {
         List<String> addresses = firestationsRepository.getFirestationsAddressByStation(firestation);
         log.info("Reply 200 (OK) to: " + request.getRequestURI(),firestation);
@@ -75,6 +109,12 @@ public class FirestationService {
 
     }
 
+    /**
+     * Gets list of homes.
+     *
+     * @param stations the stations
+     * @return the list of homes
+     */
     public ListOfPersonServedByTheseFireStationResponse getListOfHomes(List<String> stations) {
         List<String> addresses = firestationsRepository.getFirestationsAddressesByStations(new HashSet<>(stations));
         List<PersonInfoWithPhone> peopleList = firestationsRepository.getPeopleByStations(new HashSet<>(addresses));
@@ -84,6 +124,12 @@ public class FirestationService {
     }
 
 
+    /**
+     * Gets people by firestation address.
+     *
+     * @param address the address
+     * @return the people by firestation address
+     */
     public PersonsInFirestationAddressResponse getPeopleByFirestationAddress(String address) {
         List<PersonInfoFirestationAddress> personInfoFirestationAddresses = firestationsRepository.getPeopleByFirestationAddress(address);
 

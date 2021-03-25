@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Person info
+ */
 @Getter
 @Setter
 public class PersonInfo {
@@ -16,6 +19,14 @@ public class PersonInfo {
     private Collection<String> medications;
     private Collection<String> allergies;
 
+    /**
+     * Instantiates a new Person info.
+     *
+     * @param lastName      the last name
+     * @param email         the email
+     * @param address       the address
+     * @param medicalRecord the medical record
+     */
     public PersonInfo(String lastName, String email, String address, MedicalRecord medicalRecord) {
         this.lastName = lastName;
         this.email = email;

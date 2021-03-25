@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * MedicalRecord Controller
+ */
 @Api("Gestion des MedicalRecords")
 @RestController
 @AllArgsConstructor
@@ -21,6 +24,12 @@ public class MedicalRecordController {
     private final MedicalRecordService medicalRecordService;
     private final HttpServletRequest request;
 
+    /**
+     * Add medical record response entity.
+     *
+     * @param medicalRecord the medical record
+     * @return the response entity
+     */
     @ApiOperation(value = "Ajouter un dossier médical")
     @PostMapping()
     public ResponseEntity addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
@@ -28,6 +37,12 @@ public class MedicalRecordController {
         return medicalRecordService.addMedicalRecord(medicalRecord);
     }
 
+    /**
+     * Update medical record medical record.
+     *
+     * @param medicalRecord the medical record
+     * @return the medical record
+     */
     @ApiOperation(value = "Mettre à jour un dossier médical")
     @PutMapping()
     public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
@@ -35,6 +50,13 @@ public class MedicalRecordController {
         return medicalRecordService.updateMedicalRecord(medicalRecord);
     }
 
+    /**
+     * Delete medical record response entity.
+     *
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @return the response entity
+     */
     @ApiOperation(value = "Supprime un dossier médical")
     @DeleteMapping()
     public ResponseEntity deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {

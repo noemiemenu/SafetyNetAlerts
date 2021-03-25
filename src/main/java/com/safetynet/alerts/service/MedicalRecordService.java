@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * The type Medical record service.
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -20,6 +21,12 @@ public class MedicalRecordService {
     private final HttpServletRequest request;
 
 
+    /**
+     * Add medical record response entity.
+     *
+     * @param medicalRecord the medical record
+     * @return the response entity
+     */
     public ResponseEntity addMedicalRecord(MedicalRecord medicalRecord) {
         MedicalRecord medicalRecordFromDataBase = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(medicalRecord.getFirstName(), medicalRecord.getLastName());
         if (medicalRecordFromDataBase != null) {
@@ -31,12 +38,25 @@ public class MedicalRecordService {
         return ResponseEntity.created(null).body(savedMedicalRecord);
     }
 
+    /**
+     * Update medical record medical record.
+     *
+     * @param medicalRecord the medical record
+     * @return the medical record
+     */
     public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecord) {
         log.info("Reply 200 (OK) to: " + request.getRequestURI(), medicalRecord);
         return medicalRecordsRepository.save(medicalRecord);
     }
 
 
+    /**
+     * Delete medical record response entity.
+     *
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @return the response entity
+     */
     public ResponseEntity deleteMedicalRecord(String firstName, String lastName) {
 
         MedicalRecord medicalRecord = medicalRecordsRepository.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
